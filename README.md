@@ -1,35 +1,40 @@
 # Backend
 
-Create a virtual environment for Python.
+### Setup
 
+1. Download [Python 3.9+](https://www.python.org/downloads/)
 
-Install the dependencies needed using the requirements file in the /backend directory
+2. Create a [virtual environment](https://docs.python.org/3/library/venv.html) and activate it
 
-```pip install -r requirements.txt```
+    _Note: This will ensure all the required packages are not installed globally, but only in the environment_
 
+3. Navigate (```cd```) to the ```Not2BeScammed``` directory. We will install the necessary dependencies using the ```requirements.txt``` file in the ```/backend``` directory by running the following:
 
-Activate the virtual environment and run the backend server using the following command:
+        ```cd backend && pip install -r requirements.txt```
 
-```python app.py```
+    _Note: This only needs to be done once after creating the virtual environment_
+
+### Run
+
+1. Ensure the virtual environment is activated [See Setup #2]. Navigate (```cd```) to the ```Not2BeScammed``` directory and run the following:
+
+        ```cd backend && python app.py```
+
 
 # Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+### Setup
 
-### Project Setup
+1. Install [node.js](https://nodejs.org/en/download)
 
-```sh
-npm install
-```
+2. Navigate (```cd```) to the ```Not2BeScammed``` directory and install the necessary dependencies by running the following:
 
-### Compile and Hot-Reload for Development
+        ```cd frontend && npm install```
 
-```sh
-npm run dev
-```
+### Run
 
-### Type-Check, Compile and Minify for Production
+1. Navigate (```cd```) to the ```Not2BeScammed``` directory and run the following:
 
-```sh
-npm run build
-```
+        ```npm run dev```
+
+    _Note: This script will ensure any changes to the frontend UI are automatically reflected on reload of the webpage_
