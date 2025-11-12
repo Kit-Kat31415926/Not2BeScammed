@@ -15,8 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Load model and related packages
-vectorizer = joblib.load('model/model.pkl')
-model = joblib.load('model/phishing_detector_model.pkl')
+model = joblib.load('model/model.pkl')
+vectorizer = joblib.load('model/vectorizer.pkl')
 
 stops = set(stopwords.words('english'))
 ps = PorterStemmer()
@@ -42,9 +42,10 @@ def analyze():
 
     # Vectorize cleaned text
     v = vectorizer.transform([cleaned])
+    print(model.predict(v)[0])
 
     # Returned % possibility that it is spam
-    return jsonify({"success": True, "data": model.predict(v)[0]})
+    return jsonify({"success": True, "data": float(model.predict(v)[0])})
 
 
 if __name__ == '__main__':
