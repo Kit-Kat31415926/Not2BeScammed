@@ -20,7 +20,7 @@
 		<br />
 		We created this site to raise awareness about spam and prevent targets from falling 
 		victim to cyber attacks. With our custom-made machine learning model, we analyze your 
-		emails so you don't have to! With a CTRL-C CTRL-V and click, you can steer clear of 
+		emails so you don't have to! With a Ctrl-C, Ctrl-V, and click, you can steer clear of 
 		suspicious messages and stay safe over the web. Plus, we don't store any of your 
 		information! Go fishing or phishing and try not 2 be scammed!
 	</h3>

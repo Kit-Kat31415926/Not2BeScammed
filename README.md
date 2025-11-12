@@ -38,3 +38,5 @@
         ```npm run dev```
 
     _Note: This script will ensure any changes to the frontend UI are automatically reflected on reload of the webpage_
+
+2. Click the link that appears in the terminal ([localhost:5173](http://localhost:5173))
