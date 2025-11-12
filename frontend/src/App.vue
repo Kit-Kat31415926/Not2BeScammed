@@ -1,27 +1,34 @@
-<script setup lang="ts">
-import Main from './components/Main.vue'
-</script>
-
 <template>
     <div class="wrapper">
-    	<Main />
+		<!-- Create navigation bar -->
+		<nav v-if="route.path != '/'" class="nav-bar">
+			<RouterLink class="pretty-purple" to="/analyze">Analyze</RouterLink>
+			<RouterLink class="pretty-purple" to="/simulate">Simulate</RouterLink>
+			<RouterLink class="pretty-purple" to="/about">About</RouterLink>
+		</nav>
+		<!-- Render component based on router -->
+		<main>
+			<RouterView />
+		</main>
     </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+
+const isHome = () => {
+	return route.path == '/';
+};
+</script>
+
+<style>
+.nav-bar {
+	margin-bottom: 3%;
 }
 
-header {
-	display: flex;;
-	justify-content: center;
-	align-items: center;
-}
-
-header .wrapper {
-	display: flex;
-	place-items: center;
-	flex-wrap: wrap;
+.nav-bar * {
+	font-size: medium;
+	margin-right: 3%;
 }
 </style>
