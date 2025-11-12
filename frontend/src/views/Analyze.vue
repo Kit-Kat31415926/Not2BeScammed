@@ -24,6 +24,8 @@
 				We do not recommend trusting the contents of this message.
 			</span>
 		</p>
+
+		<button class="button" @click="tryAgain()" style="margin: 5% auto">🔄️ Try Again</button>
 	</div>
 </template>
 
@@ -63,6 +65,11 @@ export default {
 					this.loading = false;
 				})
 				.catch(error => console.error('Error fetching data:', error));
+		},
+		tryAgain() {
+			this.$refs.emailContent.value = "";
+			this.inputDisabled = false;
+			this.analyzed = false;
 		}
 	}
 }
