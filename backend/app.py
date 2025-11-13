@@ -21,11 +21,6 @@ vectorizer = joblib.load('model/vectorizer.pkl')
 stops = set(stopwords.words('english'))
 ps = PorterStemmer()
 
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
 @app.post('/analyze')
 def analyze():
     email_content = request.get_json()
@@ -46,6 +41,11 @@ def analyze():
 
     # Returned % possibility that it is spam
     return jsonify({"success": True, "data": float(model.predict(v)[0])})
+
+
+@app.post('/simulate')
+def simulate():
+    pass
 
 
 if __name__ == '__main__':

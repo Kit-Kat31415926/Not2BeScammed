@@ -20,6 +20,19 @@
 
         ```cd backend && python app.py```
 
+### Code Structure
+
+- ```/model```
+    - Contains the pickle files to our ML model
+
+- ```app.py```
+    - Contains all API endpoints
+    - ```analyze()``` takes in an email message and returns the chance of being spam
+    - ```simulate()``` takes in how many ham and spam the model should recieve. It then tests the model's abilities and returns the model's score.
+
+- ```requirements.txt```
+    - Contains all Python packages installed with pip to run the backend
+
 
 # Frontend
 
@@ -40,3 +53,19 @@
     _Note: This script will ensure any changes to the frontend UI are automatically reflected on reload of the webpage_
 
 2. Click the link that appears in the terminal ([localhost:5173](http://localhost:5173))
+
+### Code Structure
+
+- ```/public```
+    - Contains all images to be displayed under ```/images```
+    - Contains Fisher the robot under ```/fisher/source```
+    - Contains all fonts used under ```/fonts```
+
+- ```/src```
+    - Contains all global styling under ```/assets```
+    - Contains all routes and corresponding display components under ```/router```
+    - Contains all pages views under ```/views```
+    - Main app is displayed by ```App.vue``` and ```main.ts```
+
+- The rest of the files under ```/frontend``` contain configurations necessary for imports and running the frontend.
+
