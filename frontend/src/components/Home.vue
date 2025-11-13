@@ -1,6 +1,6 @@
 <template>
     <!-- Load logo on front page -->
-    <img src="/home_logo.png" width="100%" />
+    <img src="/images/home_logo.png" width="100%" />
     <!-- Create launch button -->
     <button id="begin" class="button" @click="launch">Fish for Phish! 🎣</button>
 </template>

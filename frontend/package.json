@@ -15,6 +15,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@compai/font-lora": "^0.0.4",
+    "@tresjs/cientos": "^5.1.0",
+    "@tresjs/core": "^5.1.0",
+    "three": "^0.181.1",
     "vue": "^3.5.22"
   },
   "devDependencies": {
