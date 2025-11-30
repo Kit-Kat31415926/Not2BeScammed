@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
+import random
 
 # Import modules for ML model
+import pandas as pd
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt_tab')
@@ -14,17 +16,97 @@ from nltk.stem import PorterStemmer
 app = Flask(__name__)
 CORS(app)
 
-# Load model and related packages
+# Load model and related packages for spam detection
 model = joblib.load('model/model.pkl')
 vectorizer = joblib.load('model/vectorizer.pkl')
 
 stops = set(stopwords.words('english'))
 ps = PorterStemmer()
 
+# Load dataset for simulation
+df = pd.read_csv("test_emails.csv")
+test_df = df[["text", "label"]].dropna()
+test_df.columns = ["text", "label"]
+# Split into ham and spam
+ham_test_df = df[df["label"] == "Ham"]
+spam_test_df = df[df["label"] == "Spam"]
+
+ALLOWABLE_ERROR = 0.05
+
+
+###################
+#                 #
+#  API Endpoints  #
+#                 #
+###################
+
 @app.post('/analyze')
 def analyze():
     email_content = request.get_json()
 
+    # Returned % possibility that it is spam
+    return jsonify({"success": True, "data": model_response(email_content)})
+
+
+@app.post('/simulate')
+def simulate():
+    # Get arguments
+    data = request.get_json()
+    numSpam = int(data.get("spam"))
+    numHam = int(data.get("ham"))
+
+    # Get specified sample of each
+    spam_emails = spam_test_df.sample(numSpam)
+    ham_emails = spam_test_df.sample(numHam)
+
+    # Feed to model random order
+    total = spam_emails.shape[0] + ham_emails.shape[0]
+    correct = 0
+
+    while spam_emails.shape[0] > 0 and ham_emails.shape[0] > 0:
+        # Choose random from each dataset to send
+        if random.randint(0, 1) == 0:
+            # Get spam to send
+            text = spam_emails.iloc[:1, 1]
+            spam_emails = spam_emails.iloc[1:]
+
+            if 1 - model_response(text) <= ALLOWABLE_ERROR:
+                correct += 1
+        else:
+            # Get ham to send
+            text = ham_emails.iloc[:1, 1]
+            ham_emails = ham_emails.iloc[1:]
+
+            if model_response(text) <= ALLOWABLE_ERROR:
+                correct += 1
+
+    # Send remaining to model
+    while spam_emails.shape[0] > 0:
+        # Get spam to send
+        text = spam_emails.iloc[:1, 1]
+        spam_emails = spam_emails.iloc[1:]
+        if 1 - model_response(text) <= ALLOWABLE_ERROR:
+            correct += 1
+
+    while ham_emails.shape[0] > 0:
+        # Get ham to send
+        text = ham_emails.iloc[:1, 1]
+        ham_emails = ham_emails.iloc[1:]
+
+        if 1 - model_response(text) <= ALLOWABLE_ERROR:
+            correct += 1
+        
+
+    return jsonify({"success": True, "accuracy": f"{correct}/{total} = {round(correct / total, 2)}"})
+
+
+####################
+#                  #
+#  Helper methods  #
+#                  #
+####################
+
+def model_response(email):
     # Clean text first
     def clean_text(text):
         text = str(text).lower()
@@ -33,19 +115,14 @@ def analyze():
         tokens = [ps.stem(w) for w in tokens]
         return " ".join(tokens)
     
-    cleaned = clean_text(email_content)
+    cleaned = clean_text(email)
 
     # Vectorize cleaned text
     v = vectorizer.transform([cleaned])
-    print(model.predict(v)[0])
 
-    # Returned % possibility that it is spam
-    return jsonify({"success": True, "data": float(model.predict(v)[0])})
-
-
-@app.post('/simulate')
-def simulate():
-    pass
+    res = float(model.predict(v)[0])
+    print("RESULT", res)
+    return res
 
 
 if __name__ == '__main__':

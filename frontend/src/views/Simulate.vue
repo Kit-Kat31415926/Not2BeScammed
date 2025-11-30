@@ -8,16 +8,24 @@
         <div>
             <label for="ham">How many <i>legitimate</i> emails do you want to send to Fisher?</label>
             <br />
-            <input name="ham" type="number" step="1" min="0" />
+            <input required name="ham" ref="numHam" type="number" step="1" min="0" max="50000" />
         </div>
         <br />
         <div>
             <label for="spam">How many <i>scam</i> emails do you want to send to Fisher?</label>
             <br />
-            <input name="spam" type="number" step="1" min="0" />
+            <input required name="spam" ref="numSpam" type="number" step="1" min="0" max="50000" />
+        </div>
+        <div style="width: fit-content; margin: 1rem;">
+            <button class="button" style="padding: 0px 1rem;" type="submit">ᯓ➤</button>
         </div>
     </form>
     
+    <div>
+        <p>
+            {{result}}
+        </p>
+    </div>
   <div ref="threeContainer" class="three-scene"></div>
 </template>
 
@@ -148,6 +156,37 @@ onMounted(() => {
     initThree();
     animate();
 });
+</script>
+
+<script>
+export default {
+	data() {
+		// Create all state variables
+		return {
+			result: null
+		}
+	},
+	methods: {
+        startSimulation() {
+            // Get values and pass to endpoint
+			let numSpam = this.$refs.numSpam.value;
+			let numHam = this.$refs.numHam.value;
+
+            fetch('http://localhost:5000/simulate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "spam": numSpam, "ham": numHam })
+                })
+				.then(response => response.json())
+				.then(data => {
+					this.result = data.accuracy;
+				})
+				.catch(error => console.error('Error fetching data:', error));
+        }
+    }
+}
 </script>
 
 <style scoped>
