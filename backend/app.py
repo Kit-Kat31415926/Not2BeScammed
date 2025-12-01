@@ -67,14 +67,14 @@ def simulate():
         # Choose random from each dataset to send
         if random.randint(0, 1) == 0:
             # Get spam to send
-            text = spam_emails.iloc[:1, 1]
+            text = spam_emails["text"].iloc[0]
             spam_emails = spam_emails.iloc[1:]
 
             if 1 - model_response(text) <= ALLOWABLE_ERROR:
                 correct += 1
         else:
             # Get ham to send
-            text = ham_emails.iloc[:1, 1]
+            text = ham_emails["text"].iloc[0]
             ham_emails = ham_emails.iloc[1:]
 
             if model_response(text) <= ALLOWABLE_ERROR:
@@ -83,21 +83,21 @@ def simulate():
     # Send remaining to model
     while spam_emails.shape[0] > 0:
         # Get spam to send
-        text = spam_emails.iloc[:1, 1]
+        text = spam_emails["text"].iloc[0]
         spam_emails = spam_emails.iloc[1:]
         if 1 - model_response(text) <= ALLOWABLE_ERROR:
             correct += 1
 
     while ham_emails.shape[0] > 0:
         # Get ham to send
-        text = ham_emails.iloc[:1, 1]
+        text = ham_emails["text"].iloc[0]
         ham_emails = ham_emails.iloc[1:]
 
-        if 1 - model_response(text) <= ALLOWABLE_ERROR:
+        if model_response(text) <= ALLOWABLE_ERROR:
             correct += 1
         
 
-    return jsonify({"success": True, "accuracy": f"{correct}/{total} = {round(correct / total, 2)}"})
+    return jsonify({"success": True, "accuracy": f"Fisher got {correct} correct of {total}! Their accuracy rate is {round(correct / total, 2)}%"})
 
 
 ####################
@@ -121,7 +121,6 @@ def model_response(email):
     v = vectorizer.transform([cleaned])
 
     res = float(model.predict(v)[0])
-    print("RESULT", res)
     return res
 
 

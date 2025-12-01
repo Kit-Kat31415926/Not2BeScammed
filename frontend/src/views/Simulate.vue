@@ -17,14 +17,14 @@
             <input required name="spam" ref="numSpam" type="number" step="1" min="0" max="50000" />
         </div>
         <div style="width: fit-content; margin: 1rem;">
-            <button class="button" style="padding: 0px 1rem;" type="submit">ᯓ➤</button>
+            <button :disabled="loading" class="button" style="padding: 0px 1rem;" type="submit">ᯓ➤</button>
         </div>
     </form>
     
-    <div>
-        <p>
+    <div style="width: 100%">
+        <h4 style="font-weight: bold; text-align: center;">
             {{result}}
-        </p>
+        </h4>
     </div>
   <div ref="threeContainer" class="three-scene"></div>
 </template>
@@ -42,6 +42,11 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import typefaceData from "@compai/font-lora/data/typefaces/normal-400.json";
 // Import vue-specific functions
 import { onMounted, ref } from 'vue';
+
+var loading = false;
+var result = ref("");
+const numSpam = ref(null);
+const numHam = ref(null);
 
 // Create a reference to the Vue div containing the three.js animations
 const threeContainer = ref(null);
@@ -68,12 +73,16 @@ const animate = () => {
 		// Calculate amount to rotate
 		const time = Date.now() * rotationSpeed;
 		const oscillation = Math.sin(time);
-		model.rotation.y = oscillation * maxRotationAngle;
+        if (loading) {
+		    model.rotation.y = oscillation * maxRotationAngle;
+        }
 	}
     
     // Animate the textMeshes to float up and down smoothly
-	scamTextMesh.position.y = 0.25 + Math.sin(Date.now() * 0.001) * 0.2; 
-	hamTextMesh.position.y = 0.25 - Math.sin(Date.now() * 0.001) * 0.2; 
+    if (loading) {
+        scamTextMesh.position.y = 0.25 + Math.sin(Date.now() * 0.001) * 0.2; 
+        hamTextMesh.position.y = 0.25 - Math.sin(Date.now() * 0.001) * 0.2; 
+    }
 
 	// Render scene
     renderer.render(scene, camera);
@@ -148,6 +157,8 @@ const initThree = () => {
     // Add to scene for display
     scene.add(scamTextMesh);
     scene.add(hamTextMesh);
+    
+    renderer.render(scene, camera);
 };
 
 
@@ -156,36 +167,28 @@ onMounted(() => {
     initThree();
     animate();
 });
-</script>
 
-<script>
-export default {
-	data() {
-		// Create all state variables
-		return {
-			result: null
-		}
-	},
-	methods: {
-        startSimulation() {
-            // Get values and pass to endpoint
-			let numSpam = this.$refs.numSpam.value;
-			let numHam = this.$refs.numHam.value;
+const startSimulation = () => {
+    loading = true;
+    result.value = "Loading...";
 
-            fetch('http://localhost:5000/simulate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ "spam": numSpam, "ham": numHam })
-                })
-				.then(response => response.json())
-				.then(data => {
-					this.result = data.accuracy;
-				})
-				.catch(error => console.error('Error fetching data:', error));
-        }
-    }
+    // Get values and pass to endpoint
+    let numSpamVal = numSpam.value.value;
+    let numHamVal = numHam.value.value;
+
+    fetch('http://localhost:5000/simulate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "spam": numSpamVal, "ham": numHamVal })
+        })
+        .then(response => response.json())
+        .then(data => {
+            result.value = data.accuracy;
+            loading = false;
+        })
+        .catch(error => console.error('Error fetching data:', error));
 }
 </script>
 
