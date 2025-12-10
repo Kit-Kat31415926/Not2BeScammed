@@ -45,10 +45,8 @@ ALLOWABLE_ERROR = 0.05
 @app.post('/analyze')
 def analyze():
     email_content = request.get_json()
-    prob = model_response(email_content) * 100
-    prob_formatted = f"{prob:.2f}%"
-    return jsonify({"success": True, "data": prob_formatted})
-
+    prob = model_response(email_content)
+    return jsonify({"success": True, "data": prob})
 
 @app.post('/simulate')
 def simulate():
