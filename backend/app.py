@@ -13,11 +13,13 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
+from tensorflow.keras.models import load_model
+
 app = Flask(__name__)
 CORS(app)
 
 # Load model and related packages for spam detection
-model = joblib.load('model/model.pkl')
+model = load_model('model/nn_model.keras')
 vectorizer = joblib.load('model/vectorizer.pkl')
 
 stops = set(stopwords.words('english'))
@@ -43,9 +45,9 @@ ALLOWABLE_ERROR = 0.05
 @app.post('/analyze')
 def analyze():
     email_content = request.get_json()
-
-    # Returned % possibility that it is spam
-    return jsonify({"success": True, "data": model_response(email_content)})
+    prob = model_response(email_content) * 100
+    prob_formatted = f"{prob:.2f}%"
+    return jsonify({"success": True, "data": prob_formatted})
 
 
 @app.post('/simulate')
@@ -118,9 +120,9 @@ def model_response(email):
     cleaned = clean_text(email)
 
     # Vectorize cleaned text
-    v = vectorizer.transform([cleaned])
+    v = vectorizer.transform([cleaned]).toarray()
 
-    res = float(model.predict(v)[0])
+    res = float(model.predict(v)[0][0])
     return res
 
 
