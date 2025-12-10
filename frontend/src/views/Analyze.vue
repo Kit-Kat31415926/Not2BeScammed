@@ -17,7 +17,7 @@
 		<h3 id="result"><i>Results:</i></h3>
 		<p v-if="loading">Analyzing...</p>
 		<p v-else>
-			This email has a {{aiResult * 100 }}% chance of being spam.
+			This email has a {{ (aiResult * 100).toFixed(2) }}% chance of being spam.
 			<span v-if="aiResult >= 0.95">
 				<br />
 				<br />
