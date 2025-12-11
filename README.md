@@ -23,7 +23,7 @@
 ### Code Structure
 
 - ```/model```
-    - Contains the pickle files to our ML model
+    - Contains the keras file to our ML neural networks model
 
 - ```app.py```
     - Contains all API endpoints
