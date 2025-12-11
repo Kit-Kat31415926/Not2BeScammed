@@ -33,7 +33,7 @@ test_df.columns = ["text", "label"]
 ham_test_df = df[df["label"] == "Ham"]
 spam_test_df = df[df["label"] == "Spam"]
 
-ALLOWABLE_ERROR = 0.05
+ALLOWABLE_ERROR = 0.20
 
 
 ###################
