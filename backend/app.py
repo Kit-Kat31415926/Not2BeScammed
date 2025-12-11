@@ -97,7 +97,7 @@ def simulate():
             correct += 1
         
 
-    return jsonify({"success": True, "accuracy": f"Fisher got {correct} correct of {total}! Their accuracy rate is {round(correct / total, 2)}%"})
+    return jsonify({"success": True, "accuracy": f"Fisher got {correct} correct of {total}! Their accuracy rate is {round(correct / total * 100, 2)}%"})
 
 
 ####################

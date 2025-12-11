@@ -18,7 +18,7 @@
 		<p v-if="loading">Analyzing...</p>
 		<p v-else>
 			This email has a {{ (aiResult * 100).toFixed(2) }}% chance of being spam.
-			<span v-if="aiResult >= 0.95">
+			<span v-if="aiResult >= 0.8">
 				<br />
 				<br />
 				We do not recommend trusting the contents of this message.
