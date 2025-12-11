@@ -102,7 +102,7 @@ print("Training the model:")
 #using 5 epoch so the run through of the entire training dataset is 5 times
 #using batches of 32 for how much data the model will learn from at one time
 #using 10% of data for validation
-model.fit(X_train, y_train, epochs=5, batch_size=32, validation_split=0.1)
+model.fit(X_train, y_train, epochs=5, batch_size=32, validation_split=0.1, shuffle=False)
 probs = model.predict(X_test)
 preds = (probs > 0.5).astype(int).flatten()
 
